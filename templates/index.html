@@ -40,10 +40,20 @@
         <h1 class="main-header__title">Каталог</h1>
         <button type="button" class="main-header__filter-btn btn" id="js-recipefilterBtn" onclick="window.location.href='/filters'">Фильтры</button>
       </header>
-
-
-
-
+      <section class="listing recipes__listing">
+        <div class="listing__recipes-list">
+          {% for recipe in recipes %}
+          <article class="recipe-card  listing__recipe-card">
+              <picture class="recipe-card__picture">
+                <img src="{{ url_for('static', filename='assets/images/' + recipe['image']) }}" alt="{{ recipe['title'] }}" class="recipe-card__img" />
+              </picture>
+              <h4 class="recipe-card__title">{{ recipe['title'] }}</h4>
+              <p class="recipe-card__description">{{ recipe['description'] }}</p>
+            </a>
+          </article>
+          {% endfor %}
+        </div>
+      </section>
     </div>
   </main>
 
