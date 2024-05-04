@@ -52,7 +52,7 @@ recipes = [
     },
     {
         "title": "Гречка с овощами",
-        "description": "Гречка, гркчка, гречка",
+        "description": "Гречка, гречка, гречка",
         "image": "buckwheat.jpg",
         "price": 170,
         "cooking_time": 10,
@@ -65,9 +65,12 @@ recipes = [
 
 @app.route('/')
 def index():
-    return render_template('index.html', recipes=recipes)
-    
-    
+    recipes_to_display = request.args.get('recipes')
+    if recipes_to_display:
+        recipes_to_display = json.loads(recipes_to_display)
+    else:
+        recipes_to_display = recipes
+    return render_template('index.html', recipes=recipes_to_display)
 
 
 if __name__ == "__main__":
