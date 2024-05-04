@@ -65,10 +65,31 @@ recipes = [
 
 @app.route('/')
 def index():
-    return render_template('index.html', recipes=recipes)
-    
-    
+    recipes_to_display = request.args.get('recipes')
+    if recipes_to_display:
+        recipes_to_display = json.loads(recipes_to_display)
+    else:
+        recipes_to_display = recipes
+    return render_template('index.html', recipes=recipes_to_display)
 
+
+@app.route('/filters')
+def show_filters():
+    return render_template('filter.html',recipes=recipes)
+
+
+@app.route('/apply_filters', methods=['POST'])
+def apply_filters():
+    price = int(request.json.get('price', 0))
+    cooking_time = int(request.json.get('cooking_time', 0))
+    difficulty = int(request.json.get('difficulty', 0))
+    
+    filtered_recipes = [recipe for recipe in recipes if
+                   recipe['price'] <= price and
+                   recipe['cooking_time'] <= cooking_time and
+                   recipe['difficulty'] <= difficulty]
+    
+    return jsonify({'recipes': filtered_recipes})
 
 if __name__ == "__main__":
     # Запуск приложения Flask
