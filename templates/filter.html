@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Lenni Art</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/styles.css') }}" />
+  
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400" rel="stylesheet">
+  
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+  </head>
+
+  <body class="body">
+    <div class="filter" id="js-eventPP">
+      <div class="filter__container">
+        <div class="filter__wrapper">
+          <div class="filter__header page-header">
+              <a href="templates/index.html"
+              class="page-header__logo">
+                  <svg class="page-header__logo-img" width="20" height="20">
+                    <use xlink:href="{{ url_for('static', filename='assets/icons/symbols.svg') }}#racoon"></use>
+                  </svg>
+            </a>
+    
+            <button type="button" class="filter__arrow arrow--left">
+              <svg class="arrow__icon" width="80" height="62">
+                <use xlink:href="{{ url_for('static', filename='assets/icons/symbols.svg') }}#arrow"></use>
+              </svg>
+            </button>
+          </div>
+    
+          <h2 class="filter__title">Фильтры</h2>
+    
+          <div class="filter__form form">
+            <div class="filter__price">
+            <h2>Стоимость блюда</h2>
+                <div class="filter__slider">
+                  <input type="range" min="200" max="1000" value="1" class="filter__slider slider" id="priceRange">
+                </div>
+                <div class="filter__description">
+                  <div class="filter__sum">Цена: </div>
+                  <div class="filter__qty" id="priceValue">200</div>
+                </div>
+              </div>
+    
+            <div class="filter__time">
+                <h2>Время готовки</h2>
+                <div class="filter__slider">
+                  <input type="range" min="5" max="120" value="1" class="filter__slider slider" id="timeRange">
+                </div>
+                <div class="filter__description">
+                  <div class="filter__t">Время: </div>
+                  <div class="filter__qty" id="timeValue">5</div>
+                </div>
+              </div>
+    
+            <div class="filter__difficult">
+                <h2>Сложность готовки</h2>
+                <div class="filter__slider">
+                  <input type="range" min="1" max="5" value="1" class="filter__slider slider" id="difficultyRange">
+                </div>
+                <div class="filter__description">
+                  <div class="filter__diff" data-caption="уровень" >Сложность: </div>
+                  <div class="filter__qty" id="difficultyValue">1</div>
+                </div>
+              </div>
+            </div>
+    
+            <div class="filter__btns">
+              <button type="button" class="filter__btn btn" id="js-potom">Применить</button>
+              <button type="button" class="filter__btn btn" id="js-potom">Сборсить</button>
+            </div>
+    
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+          var priceRange = document.getElementById("priceRange");
+          var priceValue = document.getElementById("priceValue");
+          var timeRange = document.getElementById("timeRange");
+          var timeValue = document.getElementById("timeValue");
+          var difficultyRange = document.getElementById("difficultyRange");
+          var difficultyValue = document.getElementById("difficultyValue");
+          var applyFiltersButton = document.getElementById("js-potom");
+  
+          // Обработчики изменения значений слайдеров
+          priceRange.addEventListener("input", function() {
+              priceValue.textContent = priceRange.value;
+          });
+          
+          timeRange.addEventListener("input", function() {
+              timeValue.textContent = timeRange.value;
+          });
+          
+          difficultyRange.addEventListener("input", function() {
+              difficultyValue.textContent = difficultyRange.value;
+          });
+          
+          // Обработчик нажатия кнопки "Применить"
+          applyFiltersButton.addEventListener("click", function(event) {
+              event.preventDefault();
+  
+              var price = priceRange.value;
+              var cookingTime = timeRange.value;
+              var difficulty = difficultyRange.value;
+  
+              var xhr = new XMLHttpRequest();
+              xhr.open("POST", "/apply_filters", true);
+              xhr.setRequestHeader("Content-Type", "application/json");
+              xhr.onreadystatechange = function() {
+                  if (xhr.readyState == 4 && xhr.status == 200) {
+                      var response = JSON.parse(xhr.responseText);
+                      var recipes = response.recipes;
+  
+                      // Перенаправление на главную страницу с передачей параметров фильтрации
+                      var url = "/";
+                      if (recipes.length > 0) {
+                          url += "?recipes=" + encodeURIComponent(JSON.stringify(recipes));
+                      }
+                      window.location.href = url;
+                  }
+              };
+              var data = JSON.stringify({"price": price, "cooking_time": cookingTime, "difficulty": difficulty});
+              xhr.send(data);
+          });
+      });
+  </script>
+  </body>
+</html>
