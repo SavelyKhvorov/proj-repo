@@ -44,6 +44,7 @@
         <div class="listing__recipes-list">
           {% for recipe in recipes %}
           <article class="recipe-card  listing__recipe-card">
+            <a href="{{ url_for('show_card_page', title=recipe['title']) }}" class="recipe-card__link">
               <picture class="recipe-card__picture">
                 <img src="{{ url_for('static', filename='assets/images/' + recipe['image']) }}" alt="{{ recipe['title'] }}" class="recipe-card__img" />
               </picture>
@@ -77,6 +78,7 @@
   </footer>
 
   <script src="{{ url_for('static', filename='scripts/main.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='scripts/search.js') }}"></script>
 </body>
 
 </html>
