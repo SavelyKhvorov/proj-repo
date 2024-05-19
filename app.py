@@ -1,7 +1,12 @@
 from flask import Flask, render_template, request, jsonify
 import json
 
+
 app = Flask(__name__, static_url_path='/static')
+
+
+
+
 
 recipes = [
     {
@@ -15,7 +20,11 @@ recipes = [
         "image": "soupe.jpg",
         "price": 150,
         "cooking_time": 30,
+<<<<<<< HEAD
         "difficulty": 3,  
+=======
+        "difficulty": 3,  # легко
+>>>>>>> 4747fdc5203ede00fdc74b3e777bf1715d7f6bf9
         "route": "soupe.html"
     },
     {
@@ -85,7 +94,16 @@ recipes = [
 ]
 
 
+@app.route('/card_page/<title>')
+def show_card_page(title):
+    # Найдите рецепт по названию
+    recipe = next((recipe for recipe in recipes if recipe['title'] == title), None)
+    if recipe:
+        return render_template(recipe['route'], recipe=recipe)
+    else:
+        return "Рецепт не найден"
 
+        
 @app.route('/')
 def index():
     recipes_to_display = request.args.get('recipes')
