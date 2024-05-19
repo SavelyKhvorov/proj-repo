@@ -1,18 +1,11 @@
 from flask import Flask, render_template, request, jsonify
 import json
-import os
-from utils import resize_image
+
 
 app = Flask(__name__, static_url_path='/static')
 
 
-IMAGE_DIR = 'static/images/'
 
-def process_images():
-    for filename in os.listdir(IMAGE_DIR):
-        if filename.endswith(('.png', '.jpg', '.jpeg')):
-            image_path = os.path.join(IMAGE_DIR, filename)
-            resize_image(image_path, image_path)
 
 
 recipes = [
